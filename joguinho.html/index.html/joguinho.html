@@ -35,6 +35,10 @@
       font-size: 24px;
       font-weight: bold;
     }
+
+    #high-score {
+      color: yellow;
+    }
   </style>
 </head>
 <body>
@@ -42,6 +46,7 @@
   <button id="restart-button">Reiniciar Jogo</button>
   <p id="score">Pontuação: 0</p>
   <p id="game-over">Fim de Jogo</p>
+  <p id="high-score">Recorde: 0</p>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const canvas = document.getElementById('snake');
@@ -67,6 +72,13 @@
       restartButton.addEventListener('click', () => {
         restartGame();
       });
+
+      // Recuperar o recorde do jogador do armazenamento local
+      let highScore = localStorage.getItem('highScore');
+      if (!highScore) {
+        highScore = 0;
+      }
+      document.getElementById('high-score').textContent = 'Recorde: ' + highScore;
 
       // Função para desenhar a cobra
       function drawSnake() {
@@ -96,6 +108,11 @@
         if (newHead.x === food.x && newHead.y === food.y) {
           food = { x: Math.floor(Math.random() * canvas.width / gridSize), y: Math.floor(Math.random() * canvas.height / gridSize) };
           score += 10;
+          if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('highScore', highScore);
+            document.getElementById('high-score').textContent = 'Recorde: ' + highScore;
+          }
         } else {
           snake.pop();
         }
